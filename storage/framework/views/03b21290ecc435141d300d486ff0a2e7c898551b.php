@@ -1,0 +1,97 @@
+<?php $__env->startSection('content'); ?>
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <h1 class="h3 mb-2 text-gray-800">Books</h1>
+        <div class="my-2 px-1">
+            <div class="row">
+                <div class="col-6">
+                    <div>
+                        <a href="<?php echo e(route('books.create')); ?>" class="btn-primary btn-sm">
+                            <i class="fas fa-plus-circle mr-1"></i>
+                            Add Book
+                        </a>
+                    </div>
+                </div>
+                <div class="col-6 text-right">
+                    <span class="mr-2"><a href="<?php echo e(route('books.index')); ?>">All books</a> |</span>
+                    <span class="mr-2"><a href="<?php echo e(route('admin.discountBooks')); ?>">Discount books</a> |</span>
+                    <span class="mr-2"><a href="<?php echo e(route('admin.trash-books')); ?>">Trash books</a></span>
+                </div>
+            </div>
+        </div>
+
+        <?php if(isset($discount_books)): ?>
+            <div class="alert alert-primary"><strong><?php echo e($discount_books); ?></strong></div>
+        <?php endif; ?>
+        <?php echo $__env->make('layouts.includes.flash-message', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+        <!-- DataTales Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">All books list</h6>
+            </div>
+            <div class="card-body">
+                <?php if($books->count()): ?>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                        <tr>
+                            <th>Action</th>
+                            <th>Image</th>
+                            <th>Title</th>
+                            <th>Category</th>
+                            <th>Author</th>
+                            <th>Regular Price</th>
+                            <th>Discount</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                        </tr>
+                        </thead>
+                        <tfoot>
+                        <tr>
+                            <th>Action</th>
+                            <th>Image</th>
+                            <th>Title</th>
+                            <th>Category</th>
+                            <th>Author</th>
+                            <th>Regular Price</th>
+                            <th>Discount</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                        </tr>
+                        </tfoot>
+                        <tbody>
+                        <?php $__currentLoopData = $books; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $book): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <tr>
+                            <td>
+                                <?php echo Form::open(['method'=>'DELETE', 'action'=>['Admin\AdminBooksController@destroy', $book->id]]); ?>
+
+                                <div class="action d-flex flex-row">
+                                    <a href="<?php echo e(route('books.edit', $book->id)); ?>" class="btn-primary btn btn-sm mr-2"><i class="fas fa-edit"></i></a>
+
+                                    <button type="submit" onclick="return confirm('Book will move to trash! Are you sure to delete??')" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                                </div>
+                                <?php echo Form::close(); ?>
+
+                            </td>
+                            <td><img src="<?php echo e($book->image_url); ?>" width="60" height="70" alt=""></td>
+                            <td><a href="<?php echo e(route('books.edit', $book->id)); ?>"><?php echo e($book->title); ?></a></td>
+                            <td><?php echo e($book->category->name); ?></td>
+                            <td><?php echo e($book->author->name); ?></td>
+                            <td><?php echo e($book->init_price); ?></td>
+                            <td><?php echo e($book->discount_rate); ?>%</td>
+                            <td><?php echo e($book->price); ?></td>
+                            <td><?php echo e($book->quantity); ?></td>
+                        </tr>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </tbody>
+                    </table>
+                </div>
+                <?php endif; ?>
+            </div>
+        </div>
+
+    </div>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.admin-master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\laravel\BookStoreProject2022\resources\views/admin/books/index.blade.php ENDPATH**/ ?>
